@@ -1,0 +1,161 @@
+version: '3'
+services:
+  flask:
+    image: joe40009/aicloflask:0.1
+    container_name: linechatbot
+    ports:
+      - "8888:8888"
+      - "80:5000"
+    volumes:
+      - /home/iii/line_chat_bot_tutorial/material/:/home/jovyan/work
+    command: bash -c "python /home/jovyan/work/crawler/GOGO.py >/dev/null 2>&1 & python /home/jovyan/work/usernotes.py >/dev/null 2>&1 & python /home/jovyan/work/modelconfirm.py >/dev/null 2>&1 & start-notebook.sh --NotebookApp.token=''"
+
+  serveo:
+    image: jessefugitt/docker-autossh
+    container_name: serveo
+    command: autossh -M 0 -g -N -o StrictHostKeyChecking=no -o ServerAliveInterval=5 -o ServerAliveCountMax=1 -i /root/.ssh/id_rsa  -R cb10501.serveo.net:80:flask:5000 serveo.net
+    depends_on:
+      - flask
+    links:
+      - flask
+
+  mongo:
+    image: mongo
+    container_name: mongo
+    ports:
+      - 27017:27017
+    volumes:
+      - /home/iii/line_mongodb:/data/db
+    command: mongod --replSet 'rs1'
+    links:
+      - flask
+
+  mysql:
+    image: mysql
+    container_name: mysql
+    ports:
+      - 3306:3306
+    volumes:
+      - /home/iii/line_mysql:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=iii
+    links:
+      - flask
+
+  redis:
+    image: redis
+    container_name: redis
+    ports:
+      - 6379:6379
+    links:
+      - flask
+    command: redis-server
+
+  word:
+    image: fbi7013o/word:0.2
+    container_name: word
+    volumes:
+      - /home/iii/line_chat_bot_tutorial/material/module:/opt/word/model
+    command: python word.py
+
+  pmte:
+    build: .
+    container_name: pmte
+    command: mongo-connector -m mongo:27017 -t es:9200 -d elastic2_doc_manager -n es_userevent.userevent,es_images.images
+    depends_on:
+      - es
+    links:
+      - mongo
+      - es
+    restart: always
+
+  es:
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.2.4
+    container_name: elasticsearch
+    ports:
+      - 9200:9200
+    environment:
+      - discovery.type=single-node
+    depends_on:
+      - mongo
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:6.2.4
+    container_name: kibana
+    ports:
+      - 5601:5601
+    environment:
+      - ELASTICSEARCH_URL=http://es:9200
+    links:
+      - es
+  
+  kafka4ZK:
+    image: oniontraveler/kafka_container:19.5.20
+    container_name: kafka4ZK
+    tty: true
+
+  kafka4Br1:
+    image: oniontraveler/kafka_container:19.5.20
+    container_name: kafka4Br1
+    tty: true
+    links:
+      - flask
+
+  kafka4Br2:
+    image: oniontraveler/kafka_container:19.5.20
+    container_name: kafka4Br2
+    tty: true
+
+  kafka4Br3:
+    image: oniontraveler/kafka_container:19.5.20
+    container_name: kafka4Br3
+    tty: true
+
+  master:
+    image: oniontraveler/hadoop_container:19.5.24
+    container_name: master
+    ports:
+      - 50070:50070
+      - 8088:8088
+      - 8080:8080
+      - 4040:4040
+    volumes: 
+      - ./Identify5Category:/root/models
+    tty: true
+
+  slaver1:
+    image: oniontraveler/hadoop_container:19.5.24
+    container_name: slaver1
+    ports:
+      - 50071:50070
+    tty: true
+
+  slaver2:
+    image: oniontraveler/hadoop_container:19.5.24
+    container_name: slaver2
+    tty: true
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

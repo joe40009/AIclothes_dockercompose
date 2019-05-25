@@ -1,0 +1,2 @@
+FROM jupyter/base-notebook
+RUN pip install Flask==0.12 requests line-bot-sdk pymongo jieba sklearn pymysql redis BeautifulSoup4 html5lib confluent_kafka
