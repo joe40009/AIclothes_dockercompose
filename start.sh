@@ -8,4 +8,4 @@ sh Activate3KafkaClusters.sh
 sh Activate3HadoopClusters.sh
 sh Activate3SparkClusters.sh
 sleep 5
-docker exec -it master bash -c "cd /root/models ; spark-submit --master spark://master:7077 --executor-memory 3G --executor-cores 5 --driver-memory 3G --packages org.apache.spark:spark-streaming-kafka-0-8_2.11:2.3.1 --files modules/clothes5_4310.h5 identify4spark.py"
+docker exec -itd master bash -c "cd /root/models ; spark-submit --master spark://master:7077 --executor-memory 3G --executor-cores 5 --driver-memory 3G --packages org.apache.spark:spark-streaming-kafka-0-8_2.11:2.3.1 --files modules/clothes5_4310.h5 identify4spark.py"
