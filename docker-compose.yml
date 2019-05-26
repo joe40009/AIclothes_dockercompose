@@ -52,7 +52,7 @@ services:
     command: redis-server
 
   word:
-    image: fbi7013o/word:0.2
+    image: fbi7013o/word:0.3
     container_name: word
     volumes:
       - ./line_chatbot_closet/material/module:/opt/word/model
