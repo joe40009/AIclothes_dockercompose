@@ -7,7 +7,7 @@ services:
       - "8888:8888"
       - "80:5000"
     volumes:
-      - /home/iii/line_chat_bot_tutorial/material/:/home/jovyan/work
+      - ./line_chatbot_closet/material/:/home/jovyan/work
     command: bash -c "python /home/jovyan/work/crawler/GOGO.py >/dev/null 2>&1 & python /home/jovyan/work/usernotes.py >/dev/null 2>&1 & python /home/jovyan/work/modelconfirm.py >/dev/null 2>&1 & start-notebook.sh --NotebookApp.token=''"
 
   serveo:
@@ -25,7 +25,7 @@ services:
     ports:
       - 27017:27017
     volumes:
-      - /home/iii/line_mongodb:/data/db
+      - ./line_mongodb:/data/db
     command: mongod --replSet 'rs1'
     links:
       - flask
@@ -36,7 +36,7 @@ services:
     ports:
       - 3306:3306
     volumes:
-      - /home/iii/line_mysql:/var/lib/mysql
+      - ./line_mysql:/var/lib/mysql
     environment:
       - MYSQL_ROOT_PASSWORD=iii
     links:
@@ -55,7 +55,7 @@ services:
     image: fbi7013o/word:0.2
     container_name: word
     volumes:
-      - /home/iii/line_chat_bot_tutorial/material/module:/opt/word/model
+      - ./line_chatbot_closet/material/module:/opt/word/model
     command: python word.py
 
   pmte:
