@@ -58,6 +58,16 @@ services:
       - ./line_chatbot_closet/material/module:/opt/word/model
     command: python word.py
 
+  face:
+    image: fbi7013o/face:0.9
+    container_name: face
+    volumes:
+      - ./line_chatbot_closet/material/userface:/face/n
+      - ./line_chatbot_closet/materialfaceans:/face/ans
+      - ./line_chatbot_closet/material/images/male/:/face/male
+      - ./line_chatbot_closet/material/images/female/:/face/female
+    command: python face.py
+
   pmte:
     build: .
     container_name: pmte
