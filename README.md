@@ -1,2 +1,2 @@
 # AIclothes_dockercompose
-雲顛自動化一鍵佈署
+雲端自動化一鍵佈署
